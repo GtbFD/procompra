@@ -40,7 +40,7 @@ class UserController extends Controller
 
             return view('dashboard.home', $data);
         }else{
-            dd('Não autorizado');
+            return redirect()->to('');
         }
 
     }

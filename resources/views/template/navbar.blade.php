@@ -1,3 +1,8 @@
+@if(empty(session()->get('id')))
+<script>
+    window.location.href = '/';
+</script>
+@endif
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">Procompra</a>
