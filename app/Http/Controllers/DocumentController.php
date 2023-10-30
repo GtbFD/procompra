@@ -169,7 +169,7 @@ class DocumentController extends Controller
             $dataCreation['ultima_atualizacao'] = now();
             $dataCreation['url_arquivo'] = $razaoSocial.'/'.$name;
 
-            $certidaoFalencia->update($dataCreation);
+            $certidaoFgts->update($dataCreation);
         }
 
         if (isset($certidoes['trabalhista']) && empty($certidaoTrabalhista))
@@ -193,7 +193,7 @@ class DocumentController extends Controller
             $dataCreation['ultima_atualizacao'] = now();
             $dataCreation['url_arquivo'] = $razaoSocial.'/'.$name;
 
-            $certidaoFalencia->update($dataCreation);
+            $certidaoTrabalhista->update($dataCreation);
         }
 
         return redirect()->to('/company/all');
