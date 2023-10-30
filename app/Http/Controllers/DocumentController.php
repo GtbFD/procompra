@@ -20,6 +20,11 @@ class DocumentController extends Controller
         return view('empresa.documento.cadastro', $data);
     }
 
+    public function createExternal()
+    {
+        return view('empresa.documento.cadastro_externo');
+    }
+
     public function finishCreation(Request $request)
     {
         $certidoes = $request->certidoes;
