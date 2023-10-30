@@ -69,6 +69,9 @@ Route::prefix('/document')->group(function() {
 
     Route::post('/create/finish', [\App\Http\Controllers\DocumentController::class, 'finishCreation'])
         ->name('finish-creation');
+
+    Route::get('/create/external', [\App\Http\Controllers\DocumentController::class, 'createExternal'])
+        ->name('create-external-document');
 });
 
 Route::get('/company/certidao/download/{path?}', [\App\Http\Controllers\DocumentController::class, 'downloadDoc'])
