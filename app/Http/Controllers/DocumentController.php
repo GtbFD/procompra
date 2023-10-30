@@ -29,7 +29,12 @@ class DocumentController extends Controller
     {
         $certidoes = $request->certidoes;
 
-        $company = Company::find($request->company_id);
+        if(isset($request->company_id))
+        {
+            $company = Company::find($request->company_id);
+        }else if($request->cnpj){
+            $company = Company::where('cnpj', $request->cnpj)->first();
+        }
 
         $certidaoFederal = $company->documents()->where('tipo_documento', 'federal')->first();
         $certidaoEstadual = $company->documents()->where('tipo_documento', 'estadual')->first();
