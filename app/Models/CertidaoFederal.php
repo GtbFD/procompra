@@ -12,7 +12,7 @@ class CertidaoFederal extends Document implements IDocument
     {
         $url = $request->certidoes['federal']->store('public/'.$company->cnpj);
         list($dir, $razaoSocial, $name) = explode("/", $url);
-
+        print('Criar documento');
         $company->documents()->create([
            'tipo_documento' => 'federal',
            'ultima_atualizacao' => now(),
@@ -27,7 +27,7 @@ class CertidaoFederal extends Document implements IDocument
 
         $url = $request->certidoes['federal']->store('public/'.$company->cnpj);
         list($dir, $razaoSocial, $name) = explode("/", $url);
-
+        print('Atualizar documento');
         $certidaoFederal->update([
             'tipo_documento' => 'federal',
             'ultima_atualizacao' => now(),

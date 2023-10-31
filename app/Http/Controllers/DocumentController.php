@@ -38,11 +38,16 @@ class DocumentController extends Controller
                 ->first();
         }
 
-        if (isset($certidoes['federal'])
+        /*
+         * Proxima correção -> Verificar o $certidaoFederal
+         * ver se faz fora ou dentro de cada método
+         * */
+
+        if (isset($request->certidoes['federal'])
             && empty($certidaoFederal)) {
 
             CertidaoFederal::createDoc($request, $company);
-        } else if (isset($certidoes['federal'])
+        } else if (isset($request->certidoes['federal'])
             && !empty($certidaoFederal)) {
 
             CertidaoFederal::updateDoc($request, $company);
@@ -98,7 +103,7 @@ class DocumentController extends Controller
             CertidaoTrabalhista::updateDoc($request, $company);
         }*/
 
-        return redirect()->to('/company/all');
+        //return redirect()->to('/company/all');
     }
 
     public function downloadDoc($path)
