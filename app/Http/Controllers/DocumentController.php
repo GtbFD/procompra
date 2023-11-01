@@ -32,81 +32,25 @@ class DocumentController extends Controller
     public function finishCreation(Request $request)
     {
         if (isset($request->company_id)) {
-            $company = Company::find($request->company_id);
+            $company = Company::find($request->company_id)
+                ->first();
         } else if ($request->cnpj) {
             $company = Company::where('cnpj', $request->cnpj)
                 ->first();
         }
 
-        /*
-         * Proxima correção -> Verificar o $certidaoFederal
-         * ver se faz fora ou dentro de cada método
-         * */
+        CertidaoFederal::handlerDoc($request, $company);
 
-        if (isset($request->certidoes['federal'])
-            && empty($certidaoFederal)) {
+        CertidaoEstadual::handlerDoc($request, $company);
 
-            CertidaoFederal::createDoc($request, $company);
-        } else if (isset($request->certidoes['federal'])
-            && !empty($certidaoFederal)) {
+        CertidaoMunicipal::handlerDoc($request, $company);
 
-            CertidaoFederal::updateDoc($request, $company);
-        }
+        CertidaoFalencia::handlerDoc($request, $company);
 
-        /*if (isset($certidoes['estadual'])
-            && empty($certidaoEstadual)) {
+        CertidaoFgts::handlerDoc($request, $company);
 
-            CertidaoEstadual::createDoc($request, $company);
-        } else if (isset($certidoes['estadual'])
-            && !empty($certidaoEstadual)) {
+        CertidaoTrabalhista::handlerDoc($request, $company);
 
-            CertidaoEstadual::updateDoc($request, $company);
-        }
-
-        if (isset($certidoes['municipal'])
-            && empty($certidaoMunicipal)) {
-
-            CertidaoMunicipal::createDoc($request, $company);
-        } else if (isset($certidoes['municipal'])
-            && !empty($certidaoMunicipal)) {
-
-            CertidaoMunicipal::updateDoc($request, $company);
-        }
-
-        if (isset($certidoes['falencia'])
-            && empty($certidaoFalencia)) {
-
-            CertidaoFalencia::createDoc($request, $company);
-        } else if (isset($certidoes['falencia'])
-            && !empty($certidaoFalencia)) {
-
-            CertidaoFalencia::updateDoc($request, $company);
-        }
-
-        if (isset($certidoes['fgts'])
-            && empty($certidaoFgts)) {
-
-            CertidaoFgts::createDoc($request, $company);
-        } else if (isset($certidoes['fgts'])
-            && !empty($certidaoFgts)) {
-
-            CertidaoFgts::updateDoc($request, $company);
-        }
-
-        if (isset($certidoes['trabalhista'])
-            && empty($certidaoTrabalhista)) {
-
-            CertidaoTrabalhista::createDoc($request, $company);
-        } else if (isset($certidoes['trabalhista'])
-            && !empty($certidaoTrabalhista)) {
-
-            CertidaoTrabalhista::updateDoc($request, $company);
-        }*/
-
-        //return redirect()->to('/company/all');
-    }
-
-    public function downloadDoc($path)
-    {
+        return redirect()->to('/company/all');
     }
 }
