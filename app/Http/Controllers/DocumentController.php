@@ -32,8 +32,7 @@ class DocumentController extends Controller
     public function finishCreation(Request $request)
     {
         if (isset($request->company_id)) {
-            $company = Company::find($request->company_id)
-                ->first();
+            $company = Company::find($request->company_id);
         } else if ($request->cnpj) {
             $company = Company::where('cnpj', $request->cnpj)
                 ->first();
