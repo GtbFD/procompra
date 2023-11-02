@@ -26,9 +26,13 @@ class UserController extends Controller
             if(!empty($document))
             {
                 $documentController = new DocumentController();
-                $status = $documentController->checkLateDocument($document->id);
+                $isLate = $documentController->checkLateDocument($document->id);
+                
+                if($isLate)
+                {
+                    $this->sendMailToCompanyWithLateDocument($company);
+                }
 
-                $this->sendMailToCompanyWithLateDocument($company);
             }
 
         }
@@ -36,7 +40,7 @@ class UserController extends Controller
 
     public function sendMailToCompanyWithLateDocument(Company $company)
     {
-        
+
     }
 
     public function autenticate(Request $request)
@@ -48,9 +52,9 @@ class UserController extends Controller
         {
             $request->session()->put('id', $user->id);
 
-            $this->verifyAllCompaniesWithOldDocuments();
+            //$this->verifyAllCompaniesWithOldDocuments();
 
-            //return redirect()->intended('/dashboard');
+            return redirect()->intended('/dashboard');
         }else{
             return redirect()->to('/');
         }
