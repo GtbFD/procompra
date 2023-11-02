@@ -55,21 +55,20 @@ class DocumentController extends Controller
         return redirect()->to('/company/all');
     }
 
-    public function verifyPreOldDocumentation($id)
+    public function checkLateDocument($id)
     {
         $document = Document::where(['id' => $id])->first();
 
-        $daysLimit = 5;
-        $delayDayLimit = 1;
+        $delayDayLimit = 5;
 
-        $dateLimit = Carbon::create($document->ultima_atualizacao)
-            ->subDays($daysLimit);
+        $lastUpdatedDateDocument = $document->ultima_atualizacao;
 
         $actualDate = Carbon::create(now());
 
-        $differenceDate = $actualDate->diff($dateLimit);
+        $differenceDate = $actualDate->diff($lastUpdatedDateDocument);
 
-        if($differenceDate->days >= $delayDayLimit)
+        if($differenceDate->invert
+            && $differenceDate->days >= $delayDayLimit)
         {
             return true;
         }else {
