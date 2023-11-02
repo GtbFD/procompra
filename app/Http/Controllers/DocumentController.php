@@ -9,6 +9,8 @@ use App\Models\CertidaoFgts;
 use App\Models\CertidaoMunicipal;
 use App\Models\CertidaoTrabalhista;
 use App\Models\Company;
+use App\Models\Document;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DocumentController extends Controller
@@ -51,5 +53,27 @@ class DocumentController extends Controller
         CertidaoTrabalhista::handlerDoc($request, $company);
 
         return redirect()->to('/company/all');
+    }
+
+    public function verifyPreOldDocumentation($id)
+    {
+        $document = Document::where(['id' => $id])->first();
+
+        $daysLimit = 5;
+        $delayDayLimit = 1;
+
+        $dateLimit = Carbon::create($document->ultima_atualizacao)
+            ->subDays($daysLimit);
+
+        $actualDate = Carbon::create(now());
+
+        $differenceDate = $actualDate->diff($dateLimit);
+
+        if($differenceDate->days >= $delayDayLimit)
+        {
+            return true;
+        }else {
+            return false;
+        }
     }
 }
