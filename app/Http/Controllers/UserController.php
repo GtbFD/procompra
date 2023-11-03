@@ -23,18 +23,27 @@ class UserController extends Controller
             $document = $company->documents()
                 ->where(['tipo_documento' => 'federal'])->first();
 
-            if(!empty($document))
+            if($this->isExistsDocument($document))
             {
                 $documentController = new DocumentController();
                 $isLate = $documentController->checkLateDocument($document->id);
-                
+
                 if($isLate)
                 {
                     $this->sendMailToCompanyWithLateDocument($company);
                 }
 
             }
+        }
+    }
 
+    public function isExistsDocument($document)
+    {
+        if (empty($document))
+        {
+            return false;
+        }else{
+            return true;
         }
     }
 
