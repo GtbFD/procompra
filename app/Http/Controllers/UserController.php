@@ -6,6 +6,7 @@ use App\Models\Company;
 use App\Models\Document;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -49,7 +50,17 @@ class UserController extends Controller
 
     public function sendMailToCompanyWithLateDocument(Company $company)
     {
+        $data = [
+            'mensagem' => 'Por favor, atualizar as documentações da empresa'
+        ];
 
+        Mail::send(['text' => 'mail'], $data, function($message) use ($company) {
+            $message->to($company->email, $company->razao_social)
+                ->subject('[DOCUMENTAÇÃO]: Atualização de documentação da empresa!');
+
+            $message->from('email_setor_de_compras@gmail.com',
+                'Setor de compras - Hospital Regional de Cajazeiras');
+        });
     }
 
     public function autenticate(Request $request)
