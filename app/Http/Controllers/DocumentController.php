@@ -33,26 +33,59 @@ class DocumentController extends Controller
 
     public function finishCreation(Request $request)
     {
-        if (isset($request->company_id)) {
-            $company = Company::find($request->company_id);
-        } else if ($request->cnpj) {
-            $company = Company::where('cnpj', $request->cnpj)
-                ->first();
+        $company = $this->findCompanyBy($request);
+
+        if($this->isExistCompany($company)) {
+            CertidaoFederal::handlerDoc($request, $company);
+
+            CertidaoEstadual::handlerDoc($request, $company);
+
+            CertidaoMunicipal::handlerDoc($request, $company);
+
+            CertidaoFalencia::handlerDoc($request, $company);
+
+            CertidaoFgts::handlerDoc($request, $company);
+
+            CertidaoTrabalhista::handlerDoc($request, $company);
+
+            return redirect()->to('/company/all');
+        }else {
+            return redirect()->to('/document/create/external');
         }
+    }
 
-        CertidaoFederal::handlerDoc($request, $company);
+    public function findCompanyBy(Request $request)
+    {
+        if ($this->isExistCompany($request->company_id)
+            && $this->findCompanyById($request) != null) {
+            return $this->findCompanyById($request);
 
-        CertidaoEstadual::handlerDoc($request, $company);
+        } else if ($this->isExistCompany($request)) {
+            return $this->findCompanyByCnpj($request);
+        }
+    }
 
-        CertidaoMunicipal::handlerDoc($request, $company);
+    public function isExistCompany($company)
+    {
+        if ($company != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-        CertidaoFalencia::handlerDoc($request, $company);
+    public function findCompanyById(Request $request)
+    {
+        if (isset($request->company_id)) {
+            return Company::find($request->company_id);
+        }
+    }
 
-        CertidaoFgts::handlerDoc($request, $company);
-
-        CertidaoTrabalhista::handlerDoc($request, $company);
-
-        return redirect()->to('/company/all');
+    public function findCompanyByCnpj(Request $request)
+    {
+        if (isset($request->cnpj)) {
+            return Company::where('cnpj', $request->cnpj)->first();
+        }
     }
 
     public function checkLateDocument($id)
@@ -67,11 +100,10 @@ class DocumentController extends Controller
 
         $differenceDate = $actualDate->diff($lastUpdatedDateDocument);
 
-        if($differenceDate->invert
-            && $differenceDate->days >= $delayDayLimit)
-        {
+        if ($differenceDate->invert
+            && $differenceDate->days >= $delayDayLimit) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
