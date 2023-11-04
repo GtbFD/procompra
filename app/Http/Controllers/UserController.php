@@ -15,6 +15,23 @@ class UserController extends Controller
         return view('autenticacao');
     }
 
+    public function autenticate(Request $request)
+    {
+        $user = User::where(['cpf' => $request->cpf, 'senha' => $request->senha])
+            ->first();
+
+        if (!empty($user))
+        {
+            $request->session()->put('id', $user->id);
+
+            $this->verifyAllCompaniesWithOldDocuments();
+
+            return redirect()->intended('/dashboard');
+        }else{
+            return redirect()->to('/');
+        }
+    }
+
     public function verifyAllCompaniesWithOldDocuments()
     {
         $allCompanies = Company::all();
@@ -61,23 +78,6 @@ class UserController extends Controller
             $message->from('email_setor_de_compras@gmail.com',
                 'Setor de compras - Hospital Regional de Cajazeiras');
         });
-    }
-
-    public function autenticate(Request $request)
-    {
-        $user = User::where(['cpf' => $request->cpf, 'senha' => $request->senha])
-            ->first();
-
-        if (!empty($user))
-        {
-            $request->session()->put('id', $user->id);
-
-            //$this->verifyAllCompaniesWithOldDocuments();
-
-            return redirect()->intended('/dashboard');
-        }else{
-            return redirect()->to('/');
-        }
     }
 
     public function authorization(Request $request)
