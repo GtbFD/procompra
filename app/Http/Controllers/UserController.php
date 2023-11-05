@@ -20,14 +20,13 @@ class UserController extends Controller
         $user = User::where(['cpf' => $request->cpf, 'senha' => $request->senha])
             ->first();
 
-        if (!empty($user))
-        {
+        if (!empty($user)) {
             $request->session()->put('id', $user->id);
 
             $this->verifyAllCompaniesWithOldDocuments();
 
             return redirect()->intended('/dashboard');
-        }else{
+        } else {
             return redirect()->to('/');
         }
     }
@@ -36,18 +35,15 @@ class UserController extends Controller
     {
         $allCompanies = Company::all();
 
-        foreach ($allCompanies as $company)
-        {
+        foreach ($allCompanies as $company) {
             $document = $company->documents()
                 ->where(['tipo_documento' => 'federal'])->first();
 
-            if($this->isExistsDocument($document))
-            {
+            if ($this->isExistsDocument($document)) {
                 $documentController = new DocumentController();
                 $isLate = $documentController->checkLateDocument($document->id);
 
-                if($isLate)
-                {
+                if ($isLate && !$this->hasSendedEmail($company)) {
                     $this->sendMailToCompanyWithLateDocument($company);
                 }
 
@@ -57,16 +53,27 @@ class UserController extends Controller
 
     public function isExistsDocument($document)
     {
-        if (empty($document))
-        {
+        if (empty($document)) {
             return false;
-        }else{
+        } else {
             return true;
+        }
+    }
+
+    public function hasSendedEmail(Company $company)
+    {
+        if ($company->email_documento_enviado)
+        {
+            return true;
+        }else{
+            return false;
         }
     }
 
     public function sendMailToCompanyWithLateDocument(Company $company)
     {
+        $this->markAsCheckMailSended($company);
+
         $data = [
             'mensagem' => 'Por favor, atualizar as documentações da empresa'
         ];
@@ -80,11 +87,16 @@ class UserController extends Controller
         });
     }
 
+    public function markAsCheckMailSended(Company $company)
+    {
+        Company::where(['id' => $company->id])
+            ->update(['email_documento_enviado' => true]);
+    }
+
     public function authorization(Request $request)
     {
         $userId = $request->session()->get('id');
-        if (!empty($userId))
-        {
+        if (!empty($userId)) {
             $user = User::where(['id' => $userId])->first();
 
             $data = [
@@ -92,7 +104,7 @@ class UserController extends Controller
             ];
 
             return view('dashboard.home', $data);
-        }else{
+        } else {
             return redirect()->to('');
         }
 
@@ -114,12 +126,10 @@ class UserController extends Controller
             'senha' => $request->senha
         ];
 
-        if ($tokenAutorizacao == 'procompra')
-        {
+        if ($tokenAutorizacao == 'procompra') {
             User::create($data);
             return redirect()->to('/');
-        }
-        else{
+        } else {
             return redirect()->to('/registration');
         }
 

@@ -24,6 +24,7 @@ class CreateCompaniesTable extends Migration
             $table->string('cidade')->nullable();
             $table->string('uf')->nullable();
             $table->string('cep')->nullable();
+            $table->boolean('email_documento_enviado')->nullable();
             $table->timestamps();
         });
     }

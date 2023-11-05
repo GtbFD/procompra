@@ -17,7 +17,8 @@ class Company extends Model
         'bairro',
         'cidade',
         'uf',
-        'cep'
+        'cep',
+        'email_documento_enviado'
     ];
 
     public function documents(): HasMany
