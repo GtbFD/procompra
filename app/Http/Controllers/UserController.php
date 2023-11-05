@@ -93,6 +93,11 @@ class UserController extends Controller
             ->update(['email_documento_enviado' => true]);
     }
 
+    public static function markAsNotCheckMailSended(Company $company){
+        Company::where(['id' => $company->id])
+            ->update(['email_documento_enviado' => false]);
+    }
+
     public function authorization(Request $request)
     {
         $userId = $request->session()->get('id');
