@@ -77,14 +77,24 @@ class DocumentController extends Controller
     public function findCompanyById(Request $request)
     {
         if (isset($request->company_id)) {
-            return Company::find($request->company_id);
+            return Company::where(
+                [
+                    'id' => $request->company_id,
+                    'email_documento_enviado' => false
+                ]
+            )->first();
         }
     }
 
     public function findCompanyByCnpj(Request $request)
     {
         if (isset($request->cnpj)) {
-            return Company::where('cnpj', $request->cnpj)->first();
+            return Company::where(
+                [
+                    'cnpj', $request->cnpj,
+                    'email_documento_enviado' => false
+                ]
+            )->first();
         }
     }
 
