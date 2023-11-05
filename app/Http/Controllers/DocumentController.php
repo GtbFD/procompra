@@ -36,6 +36,9 @@ class DocumentController extends Controller
         $company = $this->findCompanyBy($request);
 
         if($this->isExistCompany($company)) {
+
+            UserController::markAsNotCheckMailSended($company);
+
             CertidaoFederal::handlerDoc($request, $company);
 
             CertidaoEstadual::handlerDoc($request, $company);
@@ -79,8 +82,7 @@ class DocumentController extends Controller
         if (isset($request->company_id)) {
             return Company::where(
                 [
-                    'id' => $request->company_id,
-                    'email_documento_enviado' => false
+                    'id' => $request->company_id
                 ]
             )->first();
         }
@@ -91,8 +93,7 @@ class DocumentController extends Controller
         if (isset($request->cnpj)) {
             return Company::where(
                 [
-                    'cnpj', $request->cnpj,
-                    'email_documento_enviado' => false
+                    'cnpj', $request->cnpj
                 ]
             )->first();
         }
