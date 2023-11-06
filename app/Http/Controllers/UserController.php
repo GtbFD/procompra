@@ -75,15 +75,23 @@ class UserController extends Controller
         $this->markAsCheckMailSended($company);
 
         $data = [
-            'mensagem' => 'Por favor, atualizar as documentações da empresa'
+            'mensagem' => 'Olá, por questões de agilidade nos processos contidos neste órgão, por gentileza, atualize as seguintes documentações da empresa em nosso sistema:',
+            'certidoes' => [
+                'FEDERAL',
+                'ESTADUAL',
+                'MUNICIPAL',
+                'FALENCIA',
+                'FGTS',
+                'TRABALHISTA'
+            ]
         ];
 
         Mail::send(['text' => 'mail'], $data, function($message) use ($company) {
             $message->to($company->email, $company->razao_social)
-                ->subject('[DOCUMENTAÇÃO]: Atualização de documentação da empresa!');
+                ->subject('DOCUMENTAÇÃO: Atualização de documentação da empresa!');
 
             $message->from('email_setor_de_compras@gmail.com',
-                'Setor de compras - Hospital Regional de Cajazeiras');
+                'SETOR DE COMPRAS - HOSPITAL REGIONAL  DE CAJAZEIRAS');
         });
     }
 
