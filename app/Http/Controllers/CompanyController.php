@@ -16,11 +16,48 @@ class CompanyController extends Controller
     public function registrate(Request $request)
     {
         $company = Company::where('cnpj', $request->cnpj)->first();
+        $companyData = $this->fetchDataCompanyFromApi($request);
 
-        if (empty($company)) {
-            $companyData = Http::get('https://minhareceita.org/' . $request->cnpj);
-            
-            $data = [
+        if (!$this->existsCompany($company)) {
+
+            $data = $this->assembleDataCompany($companyData);
+
+            if (!empty($data)) {
+                Company::create($data);
+                return redirect()->to('/company/all');
+            }else{
+                return redirect()->to('/erro/company-registration');
+            }
+        } else {
+            return redirect()->to('/erro/company-registration');
+        }
+
+    }
+
+    public function existsCompany($company)
+    {
+        if (!empty($company))
+        {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public function fetchDataCompanyFromApi(Request $request)
+    {
+        return Http::get('https://minhareceita.org/' . $request->cnpj);
+    }
+
+    public function hasDataFromApi($companyData)
+    {
+        return ($companyData->status() == 200);
+    }
+
+    public function assembleDataCompany($companyData)
+    {
+        if($this->hasDataFromApi($companyData)){
+             $data = [
                 'cnpj' => $companyData['cnpj'],
                 'email' => $companyData['email'],
                 'razao_social' => $companyData['razao_social'],
@@ -32,12 +69,11 @@ class CompanyController extends Controller
                 'cep' => $companyData['cep']
             ];
 
-            Company::create($data);
-            return redirect()->to('/company/all');
-        } else {
-            return redirect()->to('/erro/company-registration');
+            return $data;
+        }else{
+            $data = [];
+            return $data;
         }
-
     }
 
     public function showAll()
