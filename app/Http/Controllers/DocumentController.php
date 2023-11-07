@@ -53,27 +53,18 @@ class DocumentController extends Controller
 
             return redirect()->to('/company/all');
         }else {
-            return redirect()->to('/document/create/external');
+            return redirect()->to('/erro/create-external-document');
         }
     }
 
     public function findCompanyBy(Request $request)
     {
-        if ($this->isExistCompany($request->company_id)
-            && $this->findCompanyById($request) != null) {
+        if ($this->findCompanyById($request) != null) {
             return $this->findCompanyById($request);
 
-        } else if ($this->isExistCompany($request)) {
-            return $this->findCompanyByCnpj($request);
-        }
-    }
+        } else if ($this->findCompanyByCnpj($request) != null) {
 
-    public function isExistCompany($company)
-    {
-        if ($company != null) {
-            return true;
-        } else {
-            return false;
+            return $this->findCompanyByCnpj($request);
         }
     }
 
@@ -93,9 +84,18 @@ class DocumentController extends Controller
         if (isset($request->cnpj)) {
             return Company::where(
                 [
-                    'cnpj', $request->cnpj
+                    'cnpj' => $request->cnpj
                 ]
             )->first();
+        }
+    }
+
+    public function isExistCompany($company)
+    {
+        if ($company != null) {
+            return true;
+        } else {
+            return false;
         }
     }
 

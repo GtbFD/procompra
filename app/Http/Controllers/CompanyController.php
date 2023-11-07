@@ -19,7 +19,7 @@ class CompanyController extends Controller
 
         if (empty($company)) {
             $companyData = Http::get('https://minhareceita.org/' . $request->cnpj);
-
+            
             $data = [
                 'cnpj' => $companyData['cnpj'],
                 'email' => $companyData['email'],
@@ -35,7 +35,7 @@ class CompanyController extends Controller
             Company::create($data);
             return redirect()->to('/company/all');
         } else {
-            dd('Já existe a empresa cadastrada!');
+            return redirect()->to('/erro/company-registration');
         }
 
     }

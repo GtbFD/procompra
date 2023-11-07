@@ -27,7 +27,7 @@ class UserController extends Controller
 
             return redirect()->intended('/dashboard');
         } else {
-            return redirect()->to('/');
+            return redirect()->to('/erro/autentication-page');
         }
     }
 
@@ -118,7 +118,7 @@ class UserController extends Controller
 
             return view('dashboard.home', $data);
         } else {
-            return redirect()->to('');
+            return redirect()->to('/erro/autentication-page');
         }
 
     }
@@ -143,7 +143,7 @@ class UserController extends Controller
             User::create($data);
             return redirect()->to('/');
         } else {
-            return redirect()->to('/registration');
+            return redirect()->to('/erro/registration');
         }
 
     }
