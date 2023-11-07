@@ -19,7 +19,8 @@ Route::get('/', [\App\Http\Controllers\UserController::class, 'autentication'])
 Route::post('/autenticate', [\App\Http\Controllers\UserController::class, 'autenticate'])
     ->name('user-autenticate');
 
-Route::get('/registration', [\App\Http\Controllers\UserController::class, 'registration']);
+Route::get('/registration', [\App\Http\Controllers\UserController::class, 'registration'])
+    ->name('registration');
 Route::post('/registrate', [\App\Http\Controllers\UserController::class, 'registrate'])
     ->name('user-registrate');
 
@@ -76,3 +77,7 @@ Route::prefix('/document')->group(function() {
 
 Route::get('/company/certidao/download/{path?}', [\App\Http\Controllers\DocumentController::class, 'downloadDoc'])
     ->name('download-doc-company');
+
+Route::get('/erro/{redirectRoute?}', function ($redirectRoute){
+   return view('error', ['redirectRoute' => $redirectRoute]);
+})->name('erro');
