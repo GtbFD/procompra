@@ -85,6 +85,7 @@ class CompanyController extends Controller
     {
         if($this->hasFields($data))
         {
+            Company::create($data);
             return redirect()->to('/company/all');
         }
     }
