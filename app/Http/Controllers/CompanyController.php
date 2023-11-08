@@ -22,16 +22,16 @@ class CompanyController extends Controller
 
             $data = $this->assembleDataCompany($companyData);
 
-            if (!empty($data)) {
-                Company::create($data);
-                return redirect()->to('/company/all');
-            }else{
-                return redirect()->to('/erro/company-registration');
-            }
+            return $this->finishCreation($data);
         } else {
             return redirect()->to('/erro/company-registration');
         }
 
+    }
+
+    public function fetchDataCompanyFromApi(Request $request)
+    {
+        return Http::get('https://minhareceita.org/' . $request->cnpj);
     }
 
     public function existsCompany($company)
@@ -42,16 +42,6 @@ class CompanyController extends Controller
         }else{
             return false;
         }
-    }
-
-    public function fetchDataCompanyFromApi(Request $request)
-    {
-        return Http::get('https://minhareceita.org/' . $request->cnpj);
-    }
-
-    public function hasDataFromApi($companyData)
-    {
-        return ($companyData->status() == 200);
     }
 
     public function assembleDataCompany($companyData)
@@ -73,6 +63,46 @@ class CompanyController extends Controller
         }else{
             $data = [];
             return $data;
+        }
+    }
+
+    public function finishCreation($data)
+    {
+        if ($data != [])
+        {
+            return $this->createdSuccess($data);
+        }else{
+            return $this->createdError($data);
+        }
+    }
+
+    public function hasDataFromApi($companyData)
+    {
+        return ($companyData->status() == 200);
+    }
+
+    public function createdSuccess($data)
+    {
+        if($this->hasFields($data))
+        {
+            return redirect()->to('/company/all');
+        }
+    }
+
+    public function createdError($data)
+    {
+        if(!$this->hasFields($data))
+        {
+            return redirect()->to('/erro/company-registration');
+        }
+    }
+
+    public function hasFields($fields)
+    {
+        if (!empty($fields)) {
+            return true;
+        }else{
+            return false;
         }
     }
 

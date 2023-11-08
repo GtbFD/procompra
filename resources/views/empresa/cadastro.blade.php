@@ -13,7 +13,7 @@
         <form action="{{route('registrate-company')}}" method="post">
             @csrf
             <label for="cnpj" class="form-label">CNPJ</label>
-            <input type="text" name="cnpj" placeholder="Digite um CNPJ" id="cnpj" class="form-control"><br>
+            <input type="text" name="cnpj" required placeholder="Digite um CNPJ" id="cnpj" class="form-control"><br>
 
 
             <button type="submit" class="btn btn-success ">Cadastrar</button>
