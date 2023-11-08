@@ -15,23 +15,35 @@ class CompanyController extends Controller
 
     public function registrate(Request $request)
     {
-        $company = Company::where('cnpj', $request->cnpj)->first();
-        $companyData = $this->fetchDataCompanyFromApi($request);
 
-        if (!$this->existsCompany($company)) {
+        $arrayOfCnpj = $this->getAllCnpj($request->cnpj);
 
-            $data = $this->assembleDataCompany($companyData);
+        foreach ($arrayOfCnpj as $cnpj) {
+            $company = Company::where('cnpj', $cnpj)->first();
 
-            return $this->finishCreation($data);
-        } else {
-            return redirect()->to('/erro/company-registration');
+            $companyData = $this->fetchDataCompanyFromApi($cnpj);
+
+            if (!$this->existsCompany($company)) {
+
+                $data = $this->assembleDataCompany($companyData);
+
+                $this->finishCreation($data);
+            } else {
+                return redirect()->to('/erro/company-registration');
+            }
         }
+        return redirect()->to('/company/all');
 
     }
 
-    public function fetchDataCompanyFromApi(Request $request)
+    public function getAllCnpj($cnpjs)
     {
-        return Http::get('https://minhareceita.org/' . $request->cnpj);
+        return explode(',', $cnpjs);
+    }
+
+    public function fetchDataCompanyFromApi($cnpj)
+    {
+        return Http::get('https://minhareceita.org/' . $cnpj);
     }
 
     public function existsCompany($company)
@@ -66,6 +78,11 @@ class CompanyController extends Controller
         }
     }
 
+    public function hasDataFromApi($companyData)
+    {
+        return ($companyData->status() == 200);
+    }
+
     public function finishCreation($data)
     {
         if ($data != [])
@@ -76,10 +93,7 @@ class CompanyController extends Controller
         }
     }
 
-    public function hasDataFromApi($companyData)
-    {
-        return ($companyData->status() == 200);
-    }
+
 
     public function createdSuccess($data)
     {
