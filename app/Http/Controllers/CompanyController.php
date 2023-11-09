@@ -27,7 +27,7 @@ class CompanyController extends Controller
 
                 $data = $this->assembleDataCompany($companyData);
 
-                $this->finishCreation($data);
+                return $this->finishCreation($data);
             } else {
                 return redirect()->to('/erro/company-registration');
             }

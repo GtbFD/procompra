@@ -75,9 +75,8 @@ Route::prefix('/document')->group(function() {
         ->name('create-external-document');
 });
 
-Route::get('/company/certidao/download/{path?}', [\App\Http\Controllers\DocumentController::class, 'downloadDoc'])
-    ->name('download-doc-company');
-
-Route::get('/erro/{redirectRoute?}', function ($redirectRoute){
-   return view('error', ['redirectRoute' => $redirectRoute]);
-})->name('erro');
+Route::prefix('/erro')->group(function () {
+    Route::get('/{redirectRoute?}', function ($redirectRoute){
+        return view('error', ['redirectRoute' => $redirectRoute]);
+    })->name('erro');
+});
