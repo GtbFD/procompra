@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class CompanyController extends Controller
@@ -123,7 +124,8 @@ class CompanyController extends Controller
 
     public function showAll()
     {
-        $companies = Company::all();
+        $COMPANIES_PER_PAGE = 5;
+        $companies = DB::table('companies')->simplePaginate($COMPANIES_PER_PAGE);
 
         $data = [
             'companies' => $companies
