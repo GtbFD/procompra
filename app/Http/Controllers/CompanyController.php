@@ -16,7 +16,7 @@ class CompanyController extends Controller
     public function registrate(Request $request)
     {
 
-        $arrayOfCnpj = $this->getAllCnpj($request->cnpj);
+        $arrayOfCnpj = $this->getAllCnpjFromInputs($request->cnpj);
 
         foreach ($arrayOfCnpj as $cnpj) {
             $company = Company::where('cnpj', $cnpj)->first();
@@ -36,7 +36,7 @@ class CompanyController extends Controller
 
     }
 
-    public function getAllCnpj($cnpjs)
+    public function getAllCnpjFromInputs($cnpjs)
     {
         return explode(',', $cnpjs);
     }

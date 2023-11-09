@@ -31,7 +31,7 @@ class DocumentController extends Controller
         return view('empresa.documento.cadastro_externo');
     }
 
-    public function finishCreation(Request $request)
+    public function createDocument(Request $request)
     {
         $company = $this->findCompanyBy($request);
 
@@ -39,17 +39,7 @@ class DocumentController extends Controller
 
             UserController::markAsNotCheckMailSended($company);
 
-            CertidaoFederal::handlerDoc($request, $company);
-
-            CertidaoEstadual::handlerDoc($request, $company);
-
-            CertidaoMunicipal::handlerDoc($request, $company);
-
-            CertidaoFalencia::handlerDoc($request, $company);
-
-            CertidaoFgts::handlerDoc($request, $company);
-
-            CertidaoTrabalhista::handlerDoc($request, $company);
+            $this->finishCreation($request, $company);
 
             return redirect()->to('/company/all');
         }else {
@@ -88,6 +78,21 @@ class DocumentController extends Controller
                 ]
             )->first();
         }
+    }
+
+    public function finishCreation($request, $company)
+    {
+        CertidaoFederal::handlerDoc($request, $company);
+
+        CertidaoEstadual::handlerDoc($request, $company);
+
+        CertidaoMunicipal::handlerDoc($request, $company);
+
+        CertidaoFalencia::handlerDoc($request, $company);
+
+        CertidaoFgts::handlerDoc($request, $company);
+
+        CertidaoTrabalhista::handlerDoc($request, $company);
     }
 
     public function isExistCompany($company)
