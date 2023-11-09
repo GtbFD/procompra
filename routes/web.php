@@ -68,7 +68,7 @@ Route::prefix('/document')->group(function() {
     Route::get('/create', [\App\Http\Controllers\DocumentController::class, 'create'])
     ->name('create-document');
 
-    Route::post('/create/finish', [\App\Http\Controllers\DocumentController::class, 'finishCreation'])
+    Route::post('/create/finish', [\App\Http\Controllers\DocumentController::class, 'createDocument'])
         ->name('finish-creation');
 
     Route::get('/create/external', [\App\Http\Controllers\DocumentController::class, 'createExternal'])
