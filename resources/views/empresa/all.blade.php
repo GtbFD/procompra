@@ -84,6 +84,6 @@
                 </tbody>
             </table>
         </div>
-        {{$companies->links()}}
+        {{$companies->links()}}<br>
     </div>
 @endsection
